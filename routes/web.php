@@ -10,11 +10,19 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::group(['middleware' => ['auth']], function () {
 
-Route::get('/', 'BookController@index')->name('index');
+    Route::get('/', 'BookController@index')->name('index');
 
-Route::get('/cart', 'BookController@cart')->name('cart');
+    Route::get('/cart', 'BookController@cart')->name('cart');
 
-Route::get('/add-cart/{name}/{auther}/{price}', 'BookController@addNewCart')->name('addNewCart');
+    Route::get('/add-cart/{id}', 'BookController@addNewCart')->name('addNewCart');
 
-Route::get('/delete', 'BookController@delete')->name('delete');
+    Route::get('/delete/{id}', 'BookController@delete')->name('delete');
+});
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('auth/facebook', 'SocialAuthController@redirectToFacebook')->name('auth.facebook');
+Route::get('auth/facebook/callback', 'SocialAuthController@handleFacebookCallback');

@@ -10,27 +10,43 @@ class BookController extends Controller
     public function index()
     {
         $books = BookModel::all();
-        return view('cart', compact('books'));
+        return view('shop1', compact('books'));
     }
 
-    public function cart()
+    public function cart(Request $request)
     {
-        return view('shop');
+        $id1 = $request->session()->get('cart');
+
+        $books = [];
+        foreach ($id1 as $key => $item) {
+            $books[] = BookModel::where('id_book', $item)->get();
+        }
+
+        return view('cart', ['books' => $books, 'id' => $id1]);
     }
 
-    public function addNewCart(Request $request)
+    public function addNewCart(Request $request, $id)
     {
-        $request->session()->push('cart',
-            [
-                'name' => $request->name,
-                'auther' => $request->auther,
-                'price' => $request->price
-            ]);
+        $request->session()->push('cart', $id);
 
         return redirect(route('index'));
     }
 
-    public function delete(Request $request) {
-        $request->session()->pull();
+    public function delete(Request $request, $id)
+    {
+        $cartInformation = $request->session()->get('cart');
+        if (empty($cartInformation)) {
+            $cartInformation = [];
+        }
+
+        foreach ($cartInformation as $key => $cart) {
+            if ($cart === $id) {
+                    unset($cartInformation[$key]);
+            }
+        }
+
+        $request->session()->put('cart', $cartInformation);
+
+        return redirect(route('cart'));
+        }
     }
-}

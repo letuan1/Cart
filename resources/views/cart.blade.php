@@ -1,30 +1,29 @@
 @extends('layout.base')
 
 @section('conten')
-    Shop
+    Cart
 @endsection
 
 @section('th')
     <th><span></span></th>
 @endsection
 
-@section('conten1')
-    <a href="{{ route('cart') }}"><i class="fas fa-shopping-cart icon"></i></a>
-@endsection
-
 @section('tbody')
-    @foreach($books as $key => $book)
+    @foreach ($books as $key => $cart)
+        @foreach($cart as $item)
         <tr>
             <td>{{ ++$key }}</td>
-            <td class="lalign">{{ $book->name_books}}</td>
-            <td>{{ $book->auther}}</td>
-            <td>{{ $book->price}}</td>
-            <td><a href="{{ route('addNewCart',
-             [
-             'name' =>$book->name_books,
-            'auther' => $book->auther,
-            'price' => $book->price
-            ]) }}"> <i class="material-icons">add</i></a></td>
+            <td>{{ $item['name_books'] }}</td>
+            <td>{{ $item['auther'] }}</td>
+            <td>{{ $item['price'] }}</td>
+{{--            <td>{{ count($item['id_book']) }}</td>--}}
+            <td><a href="{{ route('delete', $item['id_book']) }}"> <i class="material-icons">delete</i></a></td>
         </tr>
+            @endforeach
     @endforeach
+@endsection
+
+
+@section('conten1')
+    <a href="{{ route('index') }}"><i class="far fa-hand-point-left icon"></i></a>
 @endsection
